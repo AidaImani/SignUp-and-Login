@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,17 @@ EMAIL_HOST_PASSWORD = "9UcGE4GjfdY2W#GF"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "admin@gmail.com"
+
+
+# For RabbitMQ
+BROKER_URL = 'pyamqp://localhost:5672'
+CELERY_RESULT_BACKEND = 'rpc://localhost:5672'
+# Celery Data Format
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+# celery -A massage flower
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'

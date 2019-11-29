@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import SignUp
-from django.core.mail import send_mail
 from massage import settings
 import uuid
 from .models import Profile
-from django.template.loader import render_to_string
 from django.contrib.auth.models import User
+from .tasks import mail
 
 
 def signup(request):
@@ -23,10 +22,9 @@ def signup(request):
             profile = Profile(user=user, verify_id=verify_id)
             profile.save()
 
-            email_host = settings.EMAIL_HOST
             email_user = settings.EMAIL_HOST_USER
-            massage = render_to_string('user/verify.html', {'verify_id': verify_id})
-            send_mail('verify', massage, email_host, [email_user])
+            mail.delay(verify_id, email_user)
+
         return HttpResponse('please check your email')
 
 
